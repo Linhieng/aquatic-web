@@ -8,7 +8,7 @@
               <span>蓝色粮仓水产品冷藏运输</span>
             </div>
             <div>
-              <div class="avatar">
+              <!-- <div class="avatar">
                 <el-button type="text" @click="dialogVisible = true">用户信息</el-button>
                 <el-dialog
                   title="用户信息"
@@ -18,7 +18,7 @@
                   style="height:70%">
                   <div>用户的姓名、账号</div>
                 </el-dialog>
-              </div>
+              </div> -->
               <div class="toHome">
                 <a href="#/login" @click="returnLogin">退出登录</a>
               </div>
@@ -86,6 +86,10 @@ export default {
         {
           name: "跟踪路线",
           link: "/map",
+        },
+        {
+          name: "用户信息",
+          link: "/userMess",
         }
       ],
       defaultLink: '',
@@ -133,9 +137,12 @@ export default {
 
           .items {
             .el-menu {
+              .el-menu-item {
+                font-size:19px
+              }
               .is-active {
                 background-color: #4596ff !important;
-                font-size: 1.6rem;
+                font-size: 1.6rem !important;
                 font-weight: 600;
               }
             }

@@ -6,6 +6,7 @@ import inMess from '../components/inMess'
 import inquireMess from '../components/inquireMess'
 import statisticsMess from '../components/statisticsMess'
 import Map from '../components/Map'
+import userMess from '../components/userMess'
 import Login from "../views/Login.vue"
 import Register from "../views/Register.vue"
 
@@ -56,6 +57,14 @@ const routes = [
         path: '/map',
         name: 'map',
         component: Map,
+        meta: {
+          isLogin:true
+        }
+      },
+      {
+        path: '/userMess',
+        name: 'userMess',
+        component: userMess,
         meta: {
           isLogin:true
         }
