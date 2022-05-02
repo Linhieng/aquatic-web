@@ -5,7 +5,7 @@
     <el-select v-model="select" slot="prepend" placeholder="请选择">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
       </el-option>
-      
+
     </el-select>
     <el-button slot="append" icon="el-icon-search"></el-button>
   </el-input>
@@ -97,7 +97,9 @@
       <template slot-scope="scope">
         <el-button
           size="mini"
-          @click="dialogFormVisible = true">编辑</el-button>
+          :data-id="scope.row.id"
+          data-ajsdlkfa="12341"
+          @click="handleEdit">编辑</el-button>
         <el-dialog title="修改信息" :visible.sync="dialogFormVisible">
           <el-form :model="formData">
             <el-form-item label="司机" :label-width="formLabelWidth">
@@ -145,11 +147,13 @@
   export default {
     data() {
       return {
+        currentId:'',
         input1:'',
         select:'all',
         dialogFormVisible: false,
         formLabelWidth:'120px',
         tableData: [{
+          id:'1',
           driver: '范振南',
           contact: '19111321234',
           departure: '湛江',
@@ -161,6 +165,7 @@
           weight:'100',
         }],
         formData: {
+          id: '1',
           driver: '范振南',
           contact: '19111321234',
           departure: '湛江',
@@ -220,21 +225,39 @@
         row.splice(index, 1);
       },
       handleYes(row){
-        this.tableData = JSON.parse(JSON.stringify(row))
+        console.log(this.tableData);
+        this.tableData = this.tableData.forEach((v) => {
+          if (v.id == this.currentId) {
+            v = this.formData
+          }
+        })
+        console.log(this.tableData);
+        // console.log(this.formData)
+        // this.tableData = JSON.parse(JSON.stringify(row))
         this.dialogFormVisible = false
-      }
-    },
-    watch: {
-      'formData.contact': function(newValue,oldValue) {
-        this.tableData.contact = newValue ;
-        console.log('222',this.tableData.contact);
-      }
-    },
-    computed: {
-      contact(){
-        return this.tableData.contact
       },
-    }
+      handleEdit (e) {
+        console.log(e)
+        console.dir(e.target.dataset);
+        // this.currentId = '1'
+        this.dialogFormVisible = true
+      },
+    },
+    // watch: {
+    //   'formData': function (newV, oldV) {
+    //     console.log('hello')
+    //       this.tableData[this.currentId] = newV
+    //   },
+    //   // 'formData.contact': function(newValue,oldValue) {
+    //   //   this.tableData[this.currentId].contact = newValue ;
+    //   //   console.log('222',this.tableData.contact);
+    //   // }
+    // },
+    // computed: {
+    //   contact(){
+    //     return this.tableData.contact
+    //   },
+    // }
   }
 </script>
 
