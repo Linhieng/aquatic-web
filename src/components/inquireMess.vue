@@ -39,7 +39,7 @@
       label="车牌号"
       width="100">
       <template slot-scope="scope">
-        <span>{{ scope.row.vehicle }}</span>
+        <span>{{ scope.row.vehicleId }}</span>
       </template>
     </el-table-column>
 
@@ -97,9 +97,7 @@
       <template slot-scope="scope">
         <el-button
           size="mini"
-          :data-id="scope.row.id"
-          data-ajsdlkfa="12341"
-          @click="handleEdit">编辑</el-button>
+          @click="handleEdit($event, scope.row.id)">编辑</el-button>
         <el-dialog title="修改信息" :visible.sync="dialogFormVisible">
           <el-form :model="formData">
             <el-form-item label="司机" :label-width="formLabelWidth">
@@ -147,35 +145,42 @@
   export default {
     data() {
       return {
+        // 点击编辑时，保存当前被编辑的产品 id
         currentId:'',
+        currentIndex: -1,
         input1:'',
         select:'all',
+        // 控制编辑框是否显示
         dialogFormVisible: false,
         formLabelWidth:'120px',
-        tableData: [{
-          id:'1',
-          driver: '范振南',
-          contact: '19111321234',
-          departure: '湛江',
-          destination: '广州',
-          productName: '生蚝',
-          vehicleId: '粤V88888',
-          departureTime: '2022-05-01',
-          arriveTime: '2022-05-27',
-          weight:'100',
-        }],
-        formData: {
-          id: '1',
-          driver: '范振南',
-          contact: '19111321234',
-          departure: '湛江',
-          destination: '广州',
-          productName: '生蚝',
-          vehicleId: '粤V88888',
-          departureTime: '2022-05-01',
-          arriveTime: '2022-05-27',
-          weight:'100',
-        },
+        tableData: [
+          {
+            id:'1',
+            driver: '范振南',
+            contact: '19111321234',
+            departure: '湛江',
+            destination: '广州',
+            productName: '生蚝',
+            vehicleId: '粤V88888',
+            departureTime: '2022-05-01',
+            arriveTime: '2022-05-27',
+            weight:'100',
+          },
+          {
+            id:'2',
+            driver: '吴远健',
+            contact: '16512344312',
+            departure: '茂名',
+            destination: '深圳',
+            productName: '热带鱼',
+            vehicleId: '粤V66655',
+            departureTime: '2022-05-04',
+            arriveTime: '2022-05-22',
+            weight:'66',
+          },
+        ],
+        // 暂存编辑框中的数据内容
+        formData: {},
         options:[
           {
             value:'all',
@@ -224,22 +229,22 @@
       handleDelete(index, row) {
         row.splice(index, 1);
       },
+      // 修改完数据后点击确定
       handleYes(row){
-        console.log(this.tableData);
-        this.tableData = this.tableData.forEach((v) => {
-          if (v.id == this.currentId) {
-            v = this.formData
-          }
-        })
-        console.log(this.tableData);
-        // console.log(this.formData)
-        // this.tableData = JSON.parse(JSON.stringify(row))
+        // 替换被修改的数据并引起更新
+        this.tableData.splice(this.currentIndex, 1, this.formData)
         this.dialogFormVisible = false
       },
-      handleEdit (e) {
-        console.log(e)
-        console.dir(e.target.dataset);
-        // this.currentId = '1'
+      // 点击编辑
+      handleEdit (e, currentId) {
+        // 保存编辑的数据的 id
+        this.currentId = currentId
+        // 找到要修改的数据的索引
+        this.currentIndex = this.tableData.findIndex((v, i) => {
+          return v.id == this.currentId
+        })
+        // 将待编辑的数据填入暂存表 formData 中，方便编辑
+        this.formData = this.tableData[this.currentIndex]
         this.dialogFormVisible = true
       },
     },
