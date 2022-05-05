@@ -1,3 +1,4 @@
+//物流管理查询
 <template>
 <div class="bigBox">
   <div style="margin-top: 15px;width:600px" class="search">
@@ -5,7 +6,6 @@
     <el-select v-model="select" slot="prepend" placeholder="请选择">
       <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
       </el-option>
-
     </el-select>
     <el-button slot="append" icon="el-icon-search"></el-button>
   </el-input>
@@ -83,13 +83,6 @@
       </template>
     </el-table-column>
 
-    <el-table-column
-      label="车辆载重"
-      width="100">
-      <template slot-scope="scope">
-        <span>{{ scope.row.weight }}</span>
-      </template>
-    </el-table-column>
 
     <el-table-column 
     label="操作"
@@ -144,6 +137,7 @@
 <script>
   export default {
     data() {
+      this.loadData()
       return {
         // 点击编辑时，保存当前被编辑的产品 id
         currentId:'',
@@ -164,7 +158,6 @@
             vehicleId: '粤V88888',
             departureTime: '2022-05-01',
             arriveTime: '2022-05-27',
-            weight:'100',
           },
           {
             id:'2',
@@ -176,7 +169,6 @@
             vehicleId: '粤V66655',
             departureTime: '2022-05-04',
             arriveTime: '2022-05-22',
-            weight:'66',
           },
         ],
         // 暂存编辑框中的数据内容
@@ -247,6 +239,28 @@
         this.formData = this.tableData[this.currentIndex]
         this.dialogFormVisible = true
       },
+      async loadData(){
+        const data = {
+          driver:this.tableData.driver,
+          contact:this.tableData.contact,
+          departure:this.tableData.departure,
+          destination:this.tableData.destination,
+          productName:this.tableData.productName,
+          vehicleId:this.tableData.vehicleId,
+          departureTime:this.tableData.departureTime,
+          arriveTime:this.tableData.arriveTime,
+        }
+        try{
+          const resData = await this.$axios.get('http://cn-hk-nf-1.natfrp.cloud:17653/user/all',
+          data)
+          console.log(resData);
+          if(resData.code == 200) {
+            this.tableData = [resData.data]
+          }
+        } catch(error){
+          this.$message.error(error.message)
+        }
+      }
     },
     // watch: {
     //   'formData': function (newV, oldV) {
