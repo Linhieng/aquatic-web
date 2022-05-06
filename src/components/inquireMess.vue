@@ -1,6 +1,7 @@
 //物流管理查询
 <template>
 <div class="bigBox">
+  <!-- 上方的搜索框 -->
   <div style="margin-top: 15px;width:600px" class="search">
   <el-input placeholder="请输入想要查询的信息" v-model="input1" class="input-with-select">
     <el-select v-model="select" slot="prepend" placeholder="请选择">
@@ -10,6 +11,7 @@
     <el-button slot="append" icon="el-icon-search"></el-button>
   </el-input>
   </div>
+  <!-- 下方的显示框 -->
   <el-table
     :data="tableData"
     style="width: 100%">
@@ -39,7 +41,7 @@
       label="车牌号"
       width="100">
       <template slot-scope="scope">
-        <span>{{ scope.row.vehicleId }}</span>
+        <span>{{ scope.row.vehicle }}</span>
       </template>
     </el-table-column>
 
@@ -53,9 +55,9 @@
 
     <el-table-column
       label="出发时间"
-      width="130">
+      width="160">
       <template slot-scope="scope">
-        <span>{{ scope.row.departureTime }}</span>
+        <span>{{ scope.row.departureDatetime }}</span>
       </template>
     </el-table-column>
 
@@ -69,7 +71,7 @@
 
     <el-table-column
       label="到达时间"
-      width="130">
+      width="160">
       <template slot-scope="scope">
         <span>{{ scope.row.arriveTime }}</span>
       </template>
@@ -91,6 +93,7 @@
         <el-button
           size="mini"
           @click="handleEdit($event, scope.row.id)">编辑</el-button>
+        <!-- 编辑数据弹出框 -->
         <el-dialog title="修改信息" :visible.sync="dialogFormVisible">
           <el-form :model="formData">
             <el-form-item label="司机" :label-width="formLabelWidth">
@@ -99,35 +102,51 @@
             <el-form-item label="联系电话" :label-width="formLabelWidth">
               <el-input v-model="formData.contact" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="目的地" :label-width="formLabelWidth">
+            <el-form-item label="车牌号" :label-width="formLabelWidth">
+              <el-input v-model="formData.vehicleId" autocomplete="off"></el-input>
+            </el-form-item>
+            <el-form-item label="出发地" :label-width="formLabelWidth">
               <el-input v-model="formData.departure" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="出发时间" :label-width="formLabelWidth">
-              <el-input v-model="formData.departureTime" autocomplete="off"></el-input>
+              <el-input v-model="formData.departureDatetime" autocomplete="off"></el-input>
             </el-form-item>
             <el-form-item label="目的地" :label-width="formLabelWidth">
               <el-input v-model="formData.destination" autocomplete="off"></el-input>
             </el-form-item>
-            <el-form-item label="产品名称" :label-width="formLabelWidth">
-              <el-input v-model="formData.productName" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="车牌号" :label-width="formLabelWidth">
-              <el-input v-model="formData.vehicleId" autocomplete="off"></el-input>
-            </el-form-item>
             <el-form-item label="到达时间" :label-width="formLabelWidth">
               <el-input v-model="formData.arriveTime" autocomplete="off"></el-input>
             </el-form-item>
-            
+            <el-form-item label="产品名称" :label-width="formLabelWidth">
+              <el-input v-model="formData.productName" autocomplete="off"></el-input>
+            </el-form-item>
           </el-form>
           <div slot="footer" class="dialog-footer">
             <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="handleYes(tableData)">确 定</el-button>
+            <el-button type="primary" @click="handleYes">确 定</el-button>
           </div>
         </el-dialog>
+        
         <el-button
           size="mini"
           type="danger"
-          @click="handleDelete(scope.$index, tableData)">删除</el-button>
+          @click="dialogDeleteVisible = true">删除</el-button>
+        <!-- 确认删除框 -->
+        <el-dialog
+            :visible.sync="dialogDeleteVisible"
+            width="30%"
+          >
+            <span>确定删除？</span>
+            <template #footer>
+              <span class="dialog-footer">
+                <el-button @click="dialogDeleteVisible = false">取消</el-button>
+                <el-button type="primary" @click="handleDelete(scope.row.tid)"
+                  >确认</el-button
+                >
+              </span>
+            </template>
+        </el-dialog>
+          
       </template>
     </el-table-column>
   </el-table>
@@ -137,42 +156,22 @@
 <script>
   export default {
     data() {
-      this.loadData()
       return {
+        // 查询到的数据
+        tableData: [],
+        // 暂存编辑框中的数据内容
+        formData: {},
         // 点击编辑时，保存当前被编辑的产品 id
         currentId:'',
+        // 点击编辑时，保存当前被编辑的产品在 tableData 中的下标
         currentIndex: -1,
         input1:'',
         select:'all',
         // 控制编辑框是否显示
         dialogFormVisible: false,
+        // 点击删除时弹出的确认框
+        dialogDeleteVisible: false,
         formLabelWidth:'120px',
-        tableData: [
-          {
-            id:'1',
-            driver: '范振南',
-            contact: '19111321234',
-            departure: '湛江',
-            destination: '广州',
-            productName: '生蚝',
-            vehicleId: '粤V88888',
-            departureTime: '2022-05-01',
-            arriveTime: '2022-05-27',
-          },
-          {
-            id:'2',
-            driver: '吴远健',
-            contact: '16512344312',
-            departure: '茂名',
-            destination: '深圳',
-            productName: '热带鱼',
-            vehicleId: '粤V66655',
-            departureTime: '2022-05-04',
-            arriveTime: '2022-05-22',
-          },
-        ],
-        // 暂存编辑框中的数据内容
-        formData: {},
         options:[
           {
             value:'all',
@@ -218,14 +217,44 @@
       }
     },
     methods: {
-      handleDelete(index, row) {
-        row.splice(index, 1);
+      // 事件回调函数
+
+      // 点击确认删除
+      async handleDelete(tid) {
+        console.log('确认删除，tid = ', tid)
+        try {
+          const { data } = await this.$axios.get(`http://cn-hk-nf-1.natfrp.cloud:17653/logistics/delete/${tid}`)
+          if (data.code == '200' && data.msg == 'success')
+            this.$message.success('成功删除')
+          else 
+            this.$message.error(data.msg)          
+        } catch (error) {
+          this.$message.error(error.message)
+        }
+        this.dialogDeleteVisible = false
+        this.getData()
+
       },
       // 修改完数据后点击确定
-      handleYes(row){
-        // 替换被修改的数据并引起更新
-        this.tableData.splice(this.currentIndex, 1, this.formData)
+      async handleYes(){
+        console.log('修改数据，新数据：', this.formData)
+        try {
+          const {data} = await this.$axios.post(
+            `http://cn-hk-nf-1.natfrp.cloud:17653/logistics/update/${this.formData.tid}`,
+            this.formData,
+            { emulateJSON: true },
+          )
+          console.log('发起修改请求，响应数据：', data)
+          if (data.code == '200' && data.msg == 'success')
+            this.$message.success('修改成功')
+          else 
+            this.$message.error('修改失败')
+        } catch (error) {
+          this.$message.error(error.message)
+        }
         this.dialogFormVisible = false
+        // 重新渲染数据
+        this.getData()
       },
       // 点击编辑
       handleEdit (e, currentId) {
@@ -239,44 +268,26 @@
         this.formData = this.tableData[this.currentIndex]
         this.dialogFormVisible = true
       },
-      async loadData(){
-        const data = {
-          driver:this.tableData.driver,
-          contact:this.tableData.contact,
-          departure:this.tableData.departure,
-          destination:this.tableData.destination,
-          productName:this.tableData.productName,
-          vehicleId:this.tableData.vehicleId,
-          departureTime:this.tableData.departureTime,
-          arriveTime:this.tableData.arriveTime,
-        }
+      // 查询所有数据
+      async getData(){
         try{
-          const resData = await this.$axios.get('http://cn-hk-nf-1.natfrp.cloud:17653/user/all',
-          data)
-          console.log(resData);
-          if(resData.code == 200) {
-            this.tableData = [resData.data]
+          const {data:resData} = await this.$axios.get('http://cn-hk-nf-1.natfrp.cloud:17653/logistics/all')
+          if(resData.code == 200 && resData.msg == 'success') {
+            this.tableData = resData.data
+            console.log('获取到的数据',this.tableData);
+          } else {
+            this.$message.error(resData.msg)
           }
         } catch(error){
           this.$message.error(error.message)
         }
       }
     },
-    // watch: {
-    //   'formData': function (newV, oldV) {
-    //     console.log('hello')
-    //       this.tableData[this.currentId] = newV
-    //   },
-    //   // 'formData.contact': function(newValue,oldValue) {
-    //   //   this.tableData[this.currentId].contact = newValue ;
-    //   //   console.log('222',this.tableData.contact);
-    //   // }
-    // },
-    // computed: {
-    //   contact(){
-    //     return this.tableData.contact
-    //   },
-    // }
+    
+    // 钩子函数
+    mounted() {
+      this.getData()
+    },
   }
 </script>
 
