@@ -1,5 +1,7 @@
 <template>
-  <div id="map" v-loading="loading"></div>
+  <div id="map-container">
+    <div id="map" v-loading="loading"></div>
+  </div>
 </template>
 
 <script>
@@ -30,31 +32,72 @@ export default {
     }
   },
   mounted() {
-    setTimeout(() => {
-      this.map = new AMap.Map("map", {
-        zoom: 14, 
-        center: [110.303511,21.153466]
-      })
-      // 创建一个 Marker 实例：（标记点）
-      const polyline = new AMap.Polyline({
-          path: this.lineArr,          //设置线覆盖物路径
-          strokeColor: "#3366FF", //线颜色
-          strokeWeight: 5,        //线宽
-          strokeStyle: "solid",   //线样式
-      })
-      this.map.add(polyline)
-      setTimeout(() => {
-        this.loading = false
-      }, 3000);
-    }, 3000);
+    this.showMap()
   },
+  methods: {
+
+    // 显示地图
+    showMap() {
+      setTimeout(() => {
+
+      const mapOpts = {
+        zoom: 14,   // 初始缩放级别
+        center: [110.303511,21.153466],  // 中心坐标
+        showIndoorMap: false, // 是否在有矢量底图的时候自动展示室内地图，PC默认true,移动端默认false
+        resizeEnable: true, //是否监控地图容器尺寸变化，默认值为false
+        dragEnable: true, // 地图是否可通过鼠标拖拽平移，默认为true
+        keyboardEnable: false, //地图是否可通过键盘控制，默认为true
+        doubleClickZoom: false, // 地图是否可通过双击鼠标放大地图，默认为true
+        zoomEnable: true, //地图是否可缩放，默认值为true
+        rotateEnable: false, // 地图是否可旋转，3D视图默认为true，2D视图默认false
+        scrollWheel: false, // 是否允许鼠标滚动缩放
+      }
+        
+        this.map = new AMap.Map("map", mapOpts)
+        // 创建一个 Marker 实例：（标记点）
+        const polyline = new AMap.Polyline({
+            path: this.lineArr,          //设置线覆盖物路径
+            strokeColor: "#3366FF", //线颜色
+            strokeWeight: 5,        //线宽
+            strokeStyle: "solid",   //线样式
+        })
+        this.map.add(polyline)
+
+        this.map.plugin(["AMap.ToolBar"], () => {
+          this.map.addControl(new AMap.ToolBar())
+        })
+        // if(location.href.indexOf('&guide=1')!==-1){
+        //   map.setStatus({scrollWheel:false})
+        // }
+        
+        setTimeout(() => {
+          this.loading = false
+        }, 3000);
+      }, 3000);
+    }
+
+  }
 }
 
 </script>
 
 <style lang="scss" scoped>
-#map {
-  min-width: 600px;
-  min-height: 500px;
+
+#map-container {
+  widows: 100%;
+  height: 90%;
+  margin: 20px;
+  box-shadow: 0 0 10px #999;
+  border-radius: 20px;
+  overflow: hidden;
+
+  #map {
+    min-width: 600px;
+    min-height: 500px;
+    width: 100%;
+    height: 100%;
+  }
 }
+
+
 </style>

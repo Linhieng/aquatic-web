@@ -54,6 +54,7 @@ export default {
 
 
 <template>
+<div id="login-container">
 <div class="container" :class="{'active': inRegister}">
   <div class="card"></div>
   <div class="card">
@@ -103,6 +104,7 @@ export default {
     </form>
   </div>
 </div>
+</div>
 </template>
 
 <style lang="scss">
@@ -114,7 +116,6 @@ $black: #000000;
 // Pen Settings
 $primary: #363636;
 $accent: var(--bg-color);
-$max-width: 460px;
 
 // Mixins
 $level: 1;
@@ -153,10 +154,8 @@ $level: 1;
 /* Container */
 .container {
   position: relative;
-  max-width: $max-width;
-  width: 100%;
-  margin: auto;
-  margin-top: 20vh;
+  width: 460px;
+  display: inline-block;
 
   &.active {
     .card {
@@ -551,4 +550,21 @@ $level: 1;
   }
 }
 
+.container::before {
+  content: '';
+  position: fixed;
+  display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  background: linear-gradient(60deg, rgb(255, 120, 17) 0, rgb(0, 162, 255) 100%);
+}
+
+#login-container {
+  width: 530px;
+  padding-top: 80px;
+  margin: auto;
+}
 </style>

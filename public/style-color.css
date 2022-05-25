@@ -1,17 +1,17 @@
 :root {
 
   --white-color: #fff;
-  --theme-color: #ff755d;
-  --theme-shallow-color: #ff9381;
-  --theme-deep-color: #ff5a3e;
+  --theme-color: #409eff;
+  --theme-shallow-color: #79bbff;
+  --theme-deep-color: #337ecc;
   
-  --accent-color: #ff5a3e;
-  --accent-hover: #dc7461;
-  --accent-active: #ff816b;
+  --accent-color: #409eff;
+  --accent-hover: #a0cfff;
+  --accent-active: #337ecc;
   --gray-color: #dedfe1;
   
-  --bg-color: #666666;
-  --bg-deep-color: #535353;
+  --bg-color: #409eff;
+  --bg-deep-color: #337ecc;
   --bg-img: linear-gradient(to left bottom, #c2dfff 0%,#5daeff 100%);
 
   --scroll-radius: 4px;

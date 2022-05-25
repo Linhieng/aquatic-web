@@ -1,7 +1,5 @@
 <template>
-  <div id="nav">
-    <router-view/>
-  </div>
+  <router-view/>
 </template>
 
 <style lang="scss">
@@ -25,7 +23,7 @@ body {
   width: 100%;
 }
 
-$scroll-color: #ff5a3e;
+$scroll-color: #79bbff;
 *::-webkit-scrollbar {
   width: var(--scroll-width);
 }
