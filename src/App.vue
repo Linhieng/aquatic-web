@@ -1,30 +1,50 @@
 <template>
   <div id="nav">
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
+    <router-view/>
   </div>
-  <router-view/>
 </template>
 
 <style lang="scss">
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
-#nav {
-  padding: 30px;
+html{
+  overflow-y: hidden;
+}
 
-  a {
-    font-weight: bold;
-    color: #2c3e50;
+body {
+  background-color: var(--bg-color);
+  background-image: var(--bg-img);
+  min-height: 100vh;
+}
 
-    &.router-link-exact-active {
-      color: #42b983;
-    }
-  }
+#app {
+  width: 100%;
+}
+
+$scroll-color: #ff5a3e;
+*::-webkit-scrollbar {
+  width: var(--scroll-width);
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: rgba($color: $scroll-color, $alpha: 0.5);
+  border-right: 2px solid var(--white-color);
+  border-radius: var(--scroll-radius);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: rgba($color: $scroll-color, $alpha: 0.7);
+}
+
+*::-webkit-scrollbar-thumb:active {
+  background-color: rgba($color: $scroll-color, $alpha: 1);
 }
 </style>

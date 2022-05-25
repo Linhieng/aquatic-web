@@ -1,0 +1,20 @@
+:root {
+
+  --white-color: #fff;
+  --theme-color: #ff755d;
+  --theme-shallow-color: #ff9381;
+  --theme-deep-color: #ff5a3e;
+  
+  --accent-color: #ff5a3e;
+  --accent-hover: #dc7461;
+  --accent-active: #ff816b;
+  --gray-color: #dedfe1;
+  
+  --bg-color: #666666;
+  --bg-deep-color: #535353;
+  --bg-img: linear-gradient(to left bottom, #c2dfff 0%,#5daeff 100%);
+
+  --scroll-radius: 4px;
+  --scroll-width: 10px;
+  --scroll-color: #ff5a3e;
+}
