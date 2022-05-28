@@ -1,12 +1,30 @@
+import { URL } from '@/constants/default.js'
+import axios from 'axios'
+
+export function getVehicle() {
+  return new Promise(async  (res, rej) => {
+    const url = `${URL}/vehicle/free`
+    const { data: resData } = await axios.get(url)
+    if (resData.code === 200 && resData.msg === 'success') {
+      
+      res(resData.data)
+    }
+    else 
+      rej(resData.msg)
+  })
+}
+
+/* ======================= */
+
 const checkPhone = (rule, value, callback) => {
   console.log(value)
   const phoneReg = /^((13|14|15|16|17|18|19)[0-9]{1}\d{8})$/
   if (!value) 
-    return callback(new Error("电话号码不能为空"))
+    return callback(new Error('电话号码不能为空'))
 
   setTimeout(() => {
     if (!Number.isInteger(+value) || !phoneReg.test(value)) 
-      callback(new Error("请输入正确的手机号!"))
+      callback(new Error('请输入正确的手机号!'))
 
     callback()
   }, 400)
@@ -16,7 +34,7 @@ const rule2 = {max: 32, message: '超出长度！', trigger: 'blur'}
 export const rules = {
   driver:             [rule1, rule2],
   contact:            [{...rule1, validator: checkPhone}, rule2],
-  vehicle:            [rule1, rule2],
+  vehicleid:            [rule1, rule2],
   loadTime:           [rule1, rule2],
   departure:          [rule1, rule2],
   departureDatetime:  [rule1, rule2],
@@ -28,25 +46,46 @@ export const rules = {
   specification:      [rule1, rule2],
 }
 
-export const ruleForm = {
-  // 车辆信息
-  driver: Math.random().toFixed(3)+"范振南",
-  contact: "18824143496",
-  vehicle: "粤V5655",
-  // 物流信息
-  departure: "广东湛江",
-  destination: "广东广州",
-  departureDatetime: null,
-  loadTime: null,
-  description: "物流信息描述内容",
-  // 产品信息
-  productQRCode: '',
-  productName: "生蚝",
-  originPlace: "湛江",
-  specification: "特等品",
+// 英文和中文（label）相对应
+export const data2name = {
+    // 车辆信息
+    driver: '司机姓名',
+    contact: '司机号码',
+    vehicleId: '车牌号码',
+    vehicle: '车牌号码',
+    // 物流信息
+    loadTime: '装车时间',
+    departure: '出发地',
+    departureDatetime: '出发时间',
+    destination: '目的地',
+    description: '物流信息描述',
+    // 产品信息
+    productQRCode: '水产品ID',
+    productName: '产品名称',
+    originPlace: '产品产地',
+    specification: '产品规格',
 }
 
-export const address = [
+export const formData = {
+  // 车辆信息
+  driver: '范振南',
+  contact: '13412341234',
+  vehicle: '',
+  vehicleId: '',
+  // 物流信息
+  departure: '',
+  destination: '',
+  departureDatetime: null,
+  loadTime: null,
+  description: '',
+  // 产品信息
+  productQRCode: '',
+  productName: '',
+  originPlace: '',
+  specification: '优等品',
+}
+
+export const addressOptions = [
   {
     "value": "广东","label": "广东",
     "children": [

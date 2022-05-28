@@ -107,7 +107,7 @@ export default {
 </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 // Main Colors
 $accent: null;
 $white: #ffffff;

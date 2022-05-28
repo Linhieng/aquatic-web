@@ -1,267 +1,146 @@
 <template>
 <div class="bigBox">
-  <!-- 上方的搜索框 -->
-  <div style="margin-top: 15px;width:600px" class="search">
-  <el-input placeholder="请输入想要查询的信息" v-model="input1" class="input-with-select">
-    <el-select v-model="select" slot="prepend" placeholder="请选择">
-      <el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value">
-      </el-option>
-    </el-select>
-    <el-button slot="append" icon="el-icon-search"></el-button>
-  </el-input>
-  </div>
-  <!-- 下方的显示框 -->
-  <el-table
-    :data="tableData"
-    style="width: 100%">
-    <el-table-column
-      label="司机"
-      width="100">
-      <template slot-scope="scope">
-        <el-popover trigger="hover" placement="top">
-          <p>姓名: {{ scope.row.driver }}</p>
-          <p>手机号码: {{ scope.row.contact }}</p>
-          <div slot="reference" class="name-wrapper">
-            <el-tag size="medium">{{ scope.row.driver }}</el-tag>
-          </div>
-        </el-popover>
-      </template>
-    </el-table-column>
+  <el-table :data="tableData" style="width: 100%" id="data-table">
 
-    <el-table-column
-      label="联系电话"
-      width="130">
-      <template slot-scope="scope">
-        <span>{{ scope.row.contact }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column
-      label="车牌号"
-      width="100">
-      <template slot-scope="scope">
-        <span>{{ scope.row.vehicle }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column
-      label="出发地"
-      width="100">
-      <template slot-scope="scope">
-        <span>{{ scope.row.departure }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column
-      label="出发时间"
-      width="160">
-      <template slot-scope="scope">
-        <span>{{ scope.row.departureDatetime }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column
-      label="目的地"
-      width="100">
-      <template slot-scope="scope">
-        <span>{{ scope.row.destination }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column
-      label="到达时间"
-      width="160">
-      <template slot-scope="scope">
-        <span>{{ scope.row.arriveTime }}</span>
-      </template>
-    </el-table-column>
-
-    <el-table-column
-      label="产品名称"
-      width="150">
-      <template slot-scope="scope">
-        <span>{{ scope.row.productName }}</span>
-      </template>
-    </el-table-column>
-
-
-    <el-table-column 
-    label="操作"
-    width="200">
-      <template slot-scope="scope">
-        <el-button
-          size="mini"
-          @click="handleEdit($event, scope.row.id)">编辑</el-button>
-        <!-- 编辑数据弹出框 -->
-        <el-dialog title="修改信息" :visible.sync="dialogFormVisible">
-          <el-form :model="formData">
-            <el-form-item label="司机" :label-width="formLabelWidth">
-              <el-input v-model="formData.driver" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="联系电话" :label-width="formLabelWidth">
-              <el-input v-model="formData.contact" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="车牌号" :label-width="formLabelWidth">
-              <el-input v-model="formData.vehicleId" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="出发地" :label-width="formLabelWidth">
-              <el-input v-model="formData.departure" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="出发时间" :label-width="formLabelWidth">
-              <el-input v-model="formData.departureDatetime" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="目的地" :label-width="formLabelWidth">
-              <el-input v-model="formData.destination" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="到达时间" :label-width="formLabelWidth">
-              <el-input v-model="formData.arriveTime" autocomplete="off"></el-input>
-            </el-form-item>
-            <el-form-item label="产品名称" :label-width="formLabelWidth">
-              <el-input v-model="formData.productName" autocomplete="off"></el-input>
-            </el-form-item>
-          </el-form>
-          <div slot="footer" class="dialog-footer">
-            <el-button @click="dialogFormVisible = false">取 消</el-button>
-            <el-button type="primary" @click="handleYes">确 定</el-button>
-          </div>
-        </el-dialog>
-        
-        <el-button
-          size="mini"
-          type="danger"
-          @click="dialogDeleteVisible = true">删除</el-button>
-        <!-- 确认删除框 -->
-        <el-dialog
-            :visible.sync="dialogDeleteVisible"
-            width="30%"
-          >
-            <span>确定删除？</span>
-            <template #footer>
-              <span class="dialog-footer">
-                <el-button @click="dialogDeleteVisible = false">取消</el-button>
-                <el-button type="primary" @click="handleDelete(scope.row.tid)"
-                  >确认</el-button
-                >
-              </span>
-            </template>
-        </el-dialog>
+    <el-table-column label="司机" width="100"  header-align="center">
+      <template #default="scope">
+        <div style="display: flex; align-items: center; justify-content: center;">
           
+          <span style="margin-left: 10px">{{ scope.row.driver }}</span>
+        </div>
       </template>
     </el-table-column>
+
+    <el-table-column label="联系电话" width="150" header-align="center">
+      <template #default="scope">
+        <div style="display: flex; align-items: center; justify-content: center;">
+          <svg t="1653745436462" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2462" width="200" height="200"><path d="M430.549333 387.754667a70.528 70.528 0 0 0 4.394667-95.744L360.917333 198.4c-23.893333-31.573333-69.632-35.882667-100.096-11.946667-2.176 2.133333-4.352 2.133333-4.352 4.352l-65.28 65.28c-62.037333 62.037333 26.112 229.589333 187.136 390.656 160 159.957333 324.266667 245.888 387.413334 186.026667l64.170666-64.170667c28.288-28.288 28.288-73.984 0-100.096l-4.352-4.352-93.568-73.984a70.528 70.528 0 0 0-95.744 4.352l-40.277333 40.234667a632.746667 632.746667 0 0 1-115.328-88.149333c-33.706667-33.706667-62.037333-71.808-88.149333-115.328l38.101333-43.52z m-33.706666-64.213334c7.594667 9.813333 7.594667 23.936-2.176 31.573334l-52.224 55.466666c-7.637333 7.68-9.813333 19.626667-4.352 28.330667 28.288 52.224 64.170667 98.986667 105.557333 141.44 41.344 41.386667 89.173333 77.226667 141.44 105.557333 9.813333 4.352 20.650667 2.133333 28.288-4.352l55.466667-55.466666c9.813333-9.813333 21.76-9.813333 31.573333-2.218667l93.610667 76.16s2.133333 0 2.133333 2.176c9.813333 8.704 9.813333 23.936 1.109333 32.64 0 0 0 1.109333-1.066666 1.109333l-66.389334 64.213334c-31.573333 31.573333-179.541333-47.872-321.024-187.178667-141.44-139.264-217.6-289.450667-187.136-320.981333l67.456-67.456c9.813333-7.637333 26.112-7.637333 33.706667 4.352l74.026667 94.634666z" fill="#B2B2B2" p-id="2463"></path></svg>
+          <span >{{ scope.row.contact }}</span>
+        </div>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="车牌号" width="100" header-align="center">
+      <template #default="scope">
+        <div style="display: flex; align-items: center; justify-content: center;">
+          
+          <span style="margin-left: 10px">{{ scope.row.vehicle }}</span>
+        </div>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="出发地" width="150" header-align="center">
+      <template #default="scope">
+        <div style="display: flex; align-items: center; justify-content: center;">
+          
+          <span style="margin-left: 10px">{{ scope.row.departure }}</span>
+        </div>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="出发时间" width="180" header-align="center">
+      <template #default="scope">
+        <div style="display: flex; align-items: center; justify-content: center;">
+          
+          <span style="margin-left: 10px">{{ scope.row.departureDatetime }}</span>
+        </div>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="目的地" width="150" header-align="center">
+      <template #default="scope">
+        <div style="display: flex; align-items: center; justify-content: center;">
+          
+          <span style="margin-left: 10px">{{ scope.row.destination }}</span>
+        </div>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="到达时间" width="150" header-align="center">
+      <template #default="scope">
+        <div style="display: flex; align-items: center; justify-content: center;">
+          
+          <span style="margin-left: 10px">{{ scope.row.arriveTime? '':'未到达' }}</span>
+        </div>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="产品名称" width="150" header-align="center">
+      <template #default="scope">
+        <div style="display: flex; align-items: center; justify-content: center;">
+          
+          <span style="margin-left: 10px">{{ scope.row.productName }}</span>
+        </div>
+      </template>
+    </el-table-column>
+
+    <el-table-column label="操作" width="150" header-align="center">
+      <template #default="scope">
+        <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
+          >Edit</el-button
+        >
+        <el-button
+          size="small"
+          type="danger"
+          @click="handleDelete(scope.$index, scope.row)"
+          >Delete</el-button
+        >
+      </template>
+      <!-- <template #default="scope">
+        <div style="display: flex; align-items: center; justify-content: center;">
+          
+          <span style="margin-left: 10px">{{ scope.row.contact }}</span>
+        </div>
+      </template> -->
+    </el-table-column>
+
+
+    
   </el-table>
 </div>
 </template>
 
 <script>
+import { getR } from '../../request/request'
+
   export default {
     data() {
       return {
         // 查询到的数据
         tableData: [],
-        // 暂存编辑框中的数据内容
-        formData: {},
-        // 点击编辑时，保存当前被编辑的产品 id
-        currentId:'',
-        // 点击编辑时，保存当前被编辑的产品在 tableData 中的下标
-        currentIndex: -1,
-        input1:'',
-        select:'all',
-        // 控制编辑框是否显示
-        dialogFormVisible: false,
-        // 点击删除时弹出的确认框
-        dialogDeleteVisible: false,
-        formLabelWidth:'120px',
-        options:[
-          { value:'all', label:'全部' },
-          { value:'driver', label:'司机' },
-          { value:'contact', label:'联系电话' },
-          { value:'departure', label:'出发地' },
-          { value:'departureTime', label:'出发时间' },
-          { value:'destination', label:'目的地' },
-          { value:'arriveTime', label:'到达时间' },
-          { value:'vehicleId', label:'车辆号' },
-          { value:'productName', label:'产品名称' },
-          { value:'weight', label:'车辆载重' },
-        ]
       }
     },
     methods: {
-      // 事件回调函数
-
-      // 点击确认删除
-      async handleDelete(tid) {
-        console.log('确认删除，tid = ', tid)
-        try {
-          const { data } = await this.$axios.get(`http://cn-hk-nf-1.natfrp.cloud:17653/logistics/delete/${tid}`)
-          if (data.code == '200' && data.msg == 'success')
-            this.$message.success('成功删除')
-          else 
-            this.$message.error(data.msg)          
-        } catch (error) {
-          this.$message.error(error.message)
-        }
-        this.dialogDeleteVisible = false
-        this.getData()
-
-      },
-      // 修改完数据后点击确定
-      async handleYes(){
-        console.log('修改数据，新数据：', this.formData)
-        try {
-          const {data} = await this.$axios.post(
-            `http://cn-hk-nf-1.natfrp.cloud:17653/logistics/update/${this.formData.tid}`,
-            this.formData,
-            { emulateJSON: true },
-          )
-          console.log('发起修改请求，响应数据：', data)
-          if (data.code == '200' && data.msg == 'success')
-            this.$message.success('修改成功')
-          else 
-            this.$message.error('修改失败')
-        } catch (error) {
-          this.$message.error(error.message)
-        }
-        this.dialogFormVisible = false
-        // 重新渲染数据
-        this.getData()
-      },
-      // 点击编辑
-      handleEdit (e, currentId) {
-        // 保存编辑的数据的 id
-        this.currentId = currentId
-        // 找到要修改的数据的索引
-        this.currentIndex = this.tableData.findIndex((v, i) => {
-          return v.id == this.currentId
-        })
-        // 将待编辑的数据填入暂存表 formData 中，方便编辑
-        this.formData = this.tableData[this.currentIndex]
-        this.dialogFormVisible = true
-      },
       // 查询所有数据
       async getData(){
-        try{
-          const {data:resData} = await this.$axios.get('http://cn-hk-nf-1.natfrp.cloud:17653/logistics/all')
-          if(resData.code == 200 && resData.msg == 'success') {
-            this.tableData = resData.data
-            console.log('获取到的数据',this.tableData);
-          } else {
-            this.$message.error(resData.msg)
-          }
-        } catch(error){
-          this.$message.error(error.message)
-        }
+        const resData = await getR('/logistics/all')
+        this.tableData = resData
+        console.log(resData)
       }
     },
     
-    // 钩子函数
     mounted() {
       this.getData()
     },
   }
 </script>
 
+
+
 <style lang="scss" scoped>
+
+
+  .icon {
+  width: 20px;
+  height: 20px;
+  margin: 0 4px;
+}
+
 .bigBox {
+  margin: 10px;
+  box-shadow: 0 0 4px #ccc;
+  border-radius: 4px;
+  
   .input-with-select .el-input-group__prepend {
     background-color: #fff;
     .el-select {
@@ -270,4 +149,6 @@
   }
   
 }
+  
+
 </style>

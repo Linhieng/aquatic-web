@@ -1,50 +1,83 @@
 <template>
 <div>
-  <div id="c1"></div>
+<div class="btn">
+  <AddVehicle></AddVehicle>
+  <el-button
+    type="primary"
+    class="flush-btn"
+    @click="flush"
+    >刷新图表</el-button
+  >
+</div>
+<div class="show-container">
+  <div class="fence show01">
+    <VehicleShow :flushFlag="flushFlag"></VehicleShow>
+  </div>
+  <div class="fence show02">
+    <VehicleInfo :flushFlag="flushFlag"></VehicleInfo>
+  </div>
+</div>
 </div>
 </template>
 
 <script>
-
-import { Chart } from '@antv/g2'
+import VehicleShow from './VehicleShow.vue'
+import VehicleInfo from './VehicleInfo.vue'
+import AddVehicle from './AddVehicle.vue'
 
 export default {
+  components: { VehicleShow, VehicleInfo, AddVehicle },
   data() {
-    const chart = null;
-    const chartData = [
-      { year: "1951 年", sales: 38 },
-      { year: "1952 年", sales: 52 },
-      { year: "1956 年", sales: 61 },
-      { year: "1957 年", sales: 145 },
-      { year: "1958 年", sales: 48 },
-      { year: "1959 年", sales: 38 },
-      { year: "1960 年", sales: 38 },
-      { year: "1962 年", sales: 38 },
-    ];
+    let flushFlag = true  // 一变化就刷新数据
     return {
-      chart,
-      chartData,
-    };
+      flushFlag
+    }
   },
-  mounted() {
-    console.log("hello");
-    console.log(this.chart);
-    this.chart = new Chart({
-      container: "c1",
-      width: 600,
-      height: 500,
-    });
-    this.chart.data(this.chartData);
-    this.chart.scale("sales", {
-      nice: true,
-    });
-    this.chart.tooltip({
-      showMarkers: false,
-    });
-    this.chart.interaction("active-region");
-    this.chart.interval().position("year*sales");
-    this.chart.render();
+  methods: {
+    flush() {
+      this.flushFlag = !this.flushFlag
+    }
   },
 }
 
 </script>
+
+<style lang="scss" scoped>
+
+.btn {
+  height: 80px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .flush-btn {
+    width: 160px;
+    height: 50px;
+    margin: 20px;
+  }
+}
+
+  .show-container {
+    min-width: 500px;
+    display: flex;
+    justify-content: space-evenly;
+    flex-wrap: wrap;
+    margin: 10px 40px;
+
+    .fence {
+      min-width: 400px;
+      flex: 0 1 auto;
+      padding: 20px;
+      &:hover {
+        box-shadow: 0 0 10px var(--theme-color);
+        border-radius: 10px;
+      }
+    }
+    .fence.add {
+      width: 150px;
+
+    }
+  }
+
+</style>

@@ -19,22 +19,30 @@ export default {
     let loading = true
     let componentId = ''
 
-    setTimeout(() => {
-      this.loading = false
-      this.componentId = 'UploadForm'
-    }, 1000);
+    setTimeout(() => { this.componentId = 'UploadForm' })
+    setTimeout(() => { this.loading = false }, 1000)
     
     return {
       loading,
       componentId,
     }
   },
+  watch: {
+    // 监视 录入的二维码，将其转换为数组格式
+    "ruleForm.productQRCode": function (newValue, oldValue) {
+      this.array = newValue.split(/[(\r\n)\r\n]+/);
+      this.array.forEach((item, index) => {
+        if (!item) {
+          this.array.splice(index, 1);
+        }
+      });
+    },
+  },
   updated() {
-    console.log('===updated===')
-    // this.componentId = 'UploadForm'
+    console.log('UploadMsg ===updated===')
   },
   unmounted() {
-    console.log('卸载')
+    console.log('UploadMsg ===unmounted===')
   },
 }
 
