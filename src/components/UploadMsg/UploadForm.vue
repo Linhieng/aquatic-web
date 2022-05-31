@@ -7,12 +7,12 @@
     <h2 class="title">车辆信息</h2>
     <el-form-item :label="data2name.driver"> <el-input v-model="formData.driver" /> </el-form-item>
     <el-form-item :label="data2name.contact"> <el-input v-model="formData.contact" /> </el-form-item>
-    <el-form-item :label="data2name.vehicleId"> <el-select v-model="formData.vehicleId" placeholder="选择车牌">
+    <el-form-item :label="data2name.vehicle"> <el-select v-model="formData.vehicle" placeholder="选择车牌">
       <el-option
         v-for="item in vehicleArr"
         :key="item.id"
         :label="`${item.vehicle} ------ ${item.status}`"
-        :value="item.id"
+        :value="item.vehicle"
       />
     </el-select> </el-form-item>
     <br />
@@ -40,7 +40,7 @@
 <script>
 import { getVehicle, addressOptions, formData, data2name } from "./data"
 import { URL } from "@/constants/default.js"
-
+import { formatTime } from '@/utils/utils.js'
 
 export default {
   data() {
@@ -69,9 +69,9 @@ export default {
         }
       })
     },
-    // 监控车牌号(vehicleId)的选择, 让 vehicle 和 vehicleId 绑定在一起
-    'formData.vehicleId': function (newValue) {
-      this.formData.vehicle = this.id2vehicle(newValue)
+    // 监控车牌号的选择, 让 vehicle 和 vehicleId 绑定在一起
+    'formData.vehicle': function (newV) {
+      this.formData.vehicleId = this.vehicle2id(newV)
     }
   },
   computed: {
@@ -100,8 +100,8 @@ export default {
         departure: departure[0] + departure[1],
         destination: destination[0] + destination[1],
         description,
-        departureDatetime: this.formatTime(departureDatetime),
-        loadTime: this.formatTime(loadTime),
+        departureDatetime: formatTime(departureDatetime),
+        loadTime: formatTime(loadTime),
         // 产品信息
         productQRCodes: [...this.array],
         product: {
@@ -130,33 +130,33 @@ export default {
         this.formData[key] = undefined
       })
     },
-    // 将时间格式化成后台需要的时间格式
-    formatTime(ti) {
-      let data
-      try {
-        data = 
-          `${ti.getFullYear()}-${ti.getMonth() + 1 > 9 ? "" : "0"}${
-            ti.getMonth() + 1
-          }-${ti.getDate() > 9 ? "" : "0"}${ti.getDate()}T${
-            ti.getHours() > 9 ? "" : "0"
-          }${ti.getHours()}:${ti.getMinutes() > 9 ? "" : "0"}${ti.getMinutes()}:${
-            ti.getSeconds() > 9 ? "" : "0"
-          }${ti.getSeconds()}`
-      } catch (error) {
-        console.log(error)
-      }
+    // // 将时间格式化成后台需要的时间格式
+    // formatTime(ti) {
+    //   let data
+    //   try {
+    //     data = 
+    //       `${ti.getFullYear()}-${ti.getMonth() + 1 > 9 ? "" : "0"}${
+    //         ti.getMonth() + 1
+    //       }-${ti.getDate() > 9 ? "" : "0"}${ti.getDate()}T${
+    //         ti.getHours() > 9 ? "" : "0"
+    //       }${ti.getHours()}:${ti.getMinutes() > 9 ? "" : "0"}${ti.getMinutes()}:${
+    //         ti.getSeconds() > 9 ? "" : "0"
+    //       }${ti.getSeconds()}`
+    //   } catch (error) {
+    //     console.log(error)
+    //   }
       
-      return data
-    },
-    // 通过 vehicleid 找到对应的 vehicle 车牌号
-    id2vehicle(id) {
+    //   return data
+    // },
+    // 通过 vehicle 找到对应的 vehicleid
+    vehicle2id(vehicle) {
       const vehicleArr = this.vehicleArr
-      let vehicle
+      let id
       vehicleArr.forEach((item) => {
-        if (item.id === id) vehicle = item.vehicle
+        if (item.vehicle === vehicle) id = item.id
       })
-      console.log(vehicle)
-      return vehicle
+      console.log(vehicle,id)
+      return id
     },
     // 验证输入的输入是否正确
     formDataRight() {
@@ -176,7 +176,7 @@ export default {
         this.vehicleArr = v
       })
       .catch((err) => {
-        this.$message.error(err)
+        this.$message.error(`空闲车辆信息：${err}`)
       })
     console.log("UploadMsg created")
   },
@@ -223,9 +223,6 @@ export default {
     height: 46px;
     font-size: 1.1rem;
     margin-left: 40px;
-  }
-  .btn.clear {
-    
   }
 }
 </style>

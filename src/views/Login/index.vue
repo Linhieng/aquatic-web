@@ -61,12 +61,12 @@ export default {
     <h1 class="title">管理员登陆</h1>
     <form>
       <div class="input-container">
-        <input type="text" v-model="name" required="required" />
+        <input type="text" v-model="name" required="required" autocomplete="false"/>
         <label for="#{label}">输入账号</label>
         <div class="bar"></div>
       </div>
       <div class="input-container">
-        <input type="password" v-model="password" required="required" />
+        <input type="password" v-model="password" required="required" autocomplete="false"/>
         <label for="#{label}">输入密码</label>
         <div class="bar"></div>
       </div>

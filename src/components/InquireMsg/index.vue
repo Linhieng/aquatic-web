@@ -41,7 +41,6 @@
     <el-table-column label="出发时间" width="180" header-align="center">
       <template #default="scope">
         <div style="display: flex; align-items: center; justify-content: center;">
-          
           <span style="margin-left: 10px">{{ scope.row.departureDatetime }}</span>
         </div>
       </template>
@@ -56,11 +55,11 @@
       </template>
     </el-table-column>
 
-    <el-table-column label="到达时间" width="150" header-align="center">
+    <el-table-column label="到达时间" width="180" header-align="center">
       <template #default="scope">
         <div style="display: flex; align-items: center; justify-content: center;">
           
-          <span style="margin-left: 10px">{{ scope.row.arriveTime? '':'未到达' }}</span>
+          <span style="margin-left: 10px">{{ scope.row.arriveTime? scope.row.arriveTime:'未到达' }}</span>
         </div>
       </template>
     </el-table-column>
@@ -76,59 +75,155 @@
 
     <el-table-column label="操作" width="150" header-align="center">
       <template #default="scope">
-        <el-button size="small" @click="handleEdit(scope.$index, scope.row)"
-          >Edit</el-button
+        <el-button 
+          size="small" 
+          @click="handleEdit(scope.$index, scope.row)"
+          >编辑</el-button
         >
         <el-button
           size="small"
           type="danger"
           @click="handleDelete(scope.$index, scope.row)"
-          >Delete</el-button
+          >删除</el-button
         >
       </template>
-      <!-- <template #default="scope">
-        <div style="display: flex; align-items: center; justify-content: center;">
-          
-          <span style="margin-left: 10px">{{ scope.row.contact }}</span>
-        </div>
-      </template> -->
     </el-table-column>
-
-
     
   </el-table>
+
+  <el-dialog
+    v-model="dialogVisible"
+    title="编辑数据"
+    width="40%"
+    draggable
+  >
+    <el-form :model="editData" label-width="100px">
+      <el-form-item label="司机"    > <el-input v-model="editData.driver" autocomplete="off"></el-input> </el-form-item>
+      <el-form-item label="联系电话" > <el-input v-model="editData.contact" autocomplete="off"></el-input> </el-form-item>
+      <el-form-item label="车牌号"> <el-select v-model="editData.vehicle" placeholder="选择车牌">
+        <el-option
+          v-for="item in vehicleArr"
+          :key="item.id"
+          :label="item.vehicle"
+          :value="item.vehicle"
+        />
+      </el-select> </el-form-item>
+      <el-form-item label="产品名称" > <el-input v-model="editData.productName" autocomplete="off"></el-input> </el-form-item>
+      <el-form-item label="出发地"   > <el-input v-model="editData.departure" autocomplete="off"></el-input> </el-form-item>
+      <el-form-item label="出发时间"> <el-date-picker v-model="editData.departureDatetime" type="datetime" placeholder="选择日期和时间" /> </el-form-item>
+      <el-form-item label="目的地"   > <el-input v-model="editData.destination" autocomplete="off"></el-input> </el-form-item>
+      <el-form-item label="到达时间"> <el-date-picker v-model="editData.arriveTime" type="datetime" placeholder="选择日期和时间" /> </el-form-item>
+      <el-form-item label="描述信息" > <el-input v-model="editData.description" autocomplete="off"></el-input> </el-form-item>
+    </el-form>
+    
+    <template #footer>
+      <span class="dialog-footer">
+        <el-button @click="dialogVisible = false">取消</el-button>
+        <el-button type="primary" @click="editDone()"
+          >上传</el-button
+        >
+      </span>
+    </template>
+  </el-dialog>
+  
 </div>
 </template>
 
-<script>
-import { getR } from '../../request/request'
 
-  export default {
-    data() {
-      return {
-        // 查询到的数据
-        tableData: [],
+<script>
+import { getR } from '@/request/request'
+import { URL } from '@/constants/default.js'
+import { getAllVehicle } from '@/api/getAllVehicle'
+import { vehicle2id } from '@/utils/vehicle2id'
+import { formatTime } from '@/utils/utils'
+
+
+
+export default {
+  data() {
+    let tableData = [] // 查询到的数据
+    let dialogVisible = false // 控制编辑窗口的显示
+    let editData = {} // 暂存要编辑的内容
+    let vehicleArr = [] // 所有车辆车牌
+    return {
+      tableData,
+      dialogVisible,
+      editData,
+      vehicleArr,
+    }
+  },
+
+  methods: {
+    // 查询所有数据
+    async getData(){
+      const resData = await getR('/logistics/all')
+      this.tableData = resData
+      console.log(resData)
+    },
+    // 获取车牌号
+    initVehicle() {
+      getAllVehicle()
+        .then(v => this.vehicleArr = v)
+        .catch(r => console.error(r))
+    },
+    // 上传修改的信息
+    async updateData(reqData) {
+      const url = `${URL}/logistics/update/${reqData.tid}`
+      const data = reqData
+      const options = {emulateJSON: true}
+      const { data:resData } = await this.$axios.post(url, data, options)
+      console.log(resData, data)
+      if (resData.code === 200 && resData.msg === 'success') {
+        this.$msg.success('修改成功')
+        this.getData()
+      } else {
+        this.$msg.error(resData.msg)
       }
     },
-    methods: {
-      // 查询所有数据
-      async getData(){
-        const resData = await getR('/logistics/all')
-        this.tableData = resData
-        console.log(resData)
-      }
+    // 确定编辑（上传编辑内容）
+    async editDone() {
+      const vehicleId = await vehicle2id(this.editData.vehicle)
+      const departureDatetime = formatTime(this.editData.departureDatetime)
+      const arriveTime = formatTime(this.editData.arriveTime)
+      const reqData = {...this.editData, vehicleId, departureDatetime, arriveTime}
+      this.updateData(reqData)
+      this.dialogVisible = false
     },
-    
-    mounted() {
-      this.getData()
+    // 点击编辑（未上传编辑内容）
+    handleEdit(index, row) {
+      this.initVehicle()
+      this.dialogVisible = true
+      Object.keys(row).forEach(key => {
+        this.editData[key] = row[key]
+      })
     },
-  }
+    // 发送删除请求
+    delete(tid) {
+      getR(`/logistics/delete/${tid}`)
+        .then(() => {
+          this.$msg.success('已删除')
+          this.getData()
+        })
+        .catch(() => this.$msg.error('无法删除'))
+      
+    },
+    // 点击删除
+    handleDelete(index, row) {
+      console.log(index, row)
+      this.$box.confirm('确定要删除吗？', 'Waring', { confirmButtonText: '确定删除', cancelButtonText: '取消', type: 'warning', })
+        .then(() => this.delete(row.tid))
+        .catch(() => { console.log('已取消删除') })
+    },
+  },
+  
+  mounted() {
+    this.getData()
+  },
+}
 </script>
 
 
-
 <style lang="scss" scoped>
-
 
   .icon {
   width: 20px;
