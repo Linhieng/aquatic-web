@@ -60,7 +60,10 @@ export default {
                 .color("status", ["#1890ff", "#f04864"]);
             chart.interaction("element-active");
             chart.render();
+            // console.log(this.chart)  可能出现两个表格的情况？（复现不了）
+            // this.chart && this.chart.clear()
             this.chart = chart;
+            // console.log('已渲染：this.chart ? ', !!this.chart)
         },
         // 刷新
         async flush() {
@@ -69,6 +72,7 @@ export default {
                 { status: "空闲", sold: percent },
                 { status: "忙碌", sold: 1 - percent },
             ];
+            // 这里会出现 this.chart 为 null / undefined 的情况。（未复现，好像是没有车辆信息的时候）
             this.chart.changeData(data);
         }
     },
