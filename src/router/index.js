@@ -7,9 +7,9 @@ import inquireMess from '../components/inquireMess'
 import statisticsMess from '../components/statisticsMess'
 import Map from '../components/Map'
 import userMess from '../components/userMess'
-import Login from "../views/Login.vue"
+import Login from "../views/Login/Login.vue"
 import Register from "../views/Register.vue"
-
+import Layout from '../layout/index.vue'
 
 Vue.use(VueRouter)
 
@@ -20,6 +20,10 @@ const routes = [
     meta: {
       isLogin:false
     }
+  },
+  {
+    path: '/layout',
+    component: Layout,
   },
   {
     path:'/Home',
@@ -87,7 +91,6 @@ const routes = [
     meta: {
       isLogin:false
     }
-    
   },
 ]
 
@@ -98,21 +101,22 @@ const router = new VueRouter({
 router.beforeEach((to,from,next) => {
   let getFlag = localStorage.getItem("Flag")
   
-  if(getFlag === 'isLogin'){
-    store.state.isLogin = true
-    next()
-    if(!to.meta.isLogin) {
-    alert("您已登录，如要重新登录请先退出登录")
-      next({ path:'/inMess'})
-    }
-  } else {
-    if (to.meta.isLogin){
-      next({path : '/login'})
-      alert("请先登录")
-    } else {
-      next()
-    }
-  }
+  // if(getFlag === 'isLogin'){
+  //   store.state.isLogin = true
+  //   next()
+  //   if(!to.meta.isLogin) {
+  //   alert("您已登录，如要重新登录请先退出登录")
+  //     next({ path:'/inMess'})
+  //   }
+  // } else {
+  //   if (to.meta.isLogin){
+  //     next({path : '/login'})
+  //     alert("请先登录")
+  //   } else {
+  //     next()
+  //   }
+  // }
+  next()
 })
 
 export default router

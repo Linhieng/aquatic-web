@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
 Vue.use(Vuex);
- 
+
 const store = new Vuex.Store({
   state: {
     isLogin:false
@@ -25,7 +25,6 @@ const store = new Vuex.Store({
   },
   actions: {
     userLogin({commit},flag){
-        console.log("22222222222222",flag);
         commit("userStatus",flag)
     }
   }

@@ -104,9 +104,9 @@ export default {
       localStorage.removeItem("Flag");
       this.$router.push("/login");
     },
-    handleClose(done) {
-      done();
-    }
+    // handleClose(done) {
+    //   done();
+    // }
   }
 };
 </script>

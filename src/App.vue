@@ -44,4 +44,15 @@ export default {
   background: rgb(68, 68, 68);
   border-radius: 10px;
 }
+
+:root {
+  --bg-color: #79bbff;
+  --bg-img: linear-gradient(to left bottom, #c2dfff 0%,#5daeff 100%);
+}
+
+body {
+  background-color: var(--bg-color);
+  background-image: var(--bg-img);
+  min-height: 100vh;
+}
 </style>
