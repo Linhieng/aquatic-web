@@ -18,9 +18,11 @@
     <br />
     <h2 class="title">运输信息</h2>
     <el-form-item :label="data2name.loadTime"> <el-date-picker v-model="formData.loadTime" type="datetime" placeholder="选择日期和时间" /> </el-form-item>
-    <el-form-item :label="data2name.departure"> <el-cascader v-model="formData.departure" :options="addressOptions" /> </el-form-item>
+    <!-- <el-form-item :label="data2name.departure"> <el-cascader v-model="formData.departure" :options="addressOptions" /> </el-form-item> -->
+    <el-form-item :label="data2name.departure"> <el-input v-model="formData.departure" /> </el-form-item>
     <el-form-item :label="data2name.departureDatetime"> <el-date-picker v-model="formData.departureDatetime" type="datetime" placeholder="选择日期和时间" /> </el-form-item>
-    <el-form-item :label="data2name.destination"> <el-cascader v-model="formData.destination" :options="addressOptions" /> </el-form-item>
+    <!-- <el-form-item :label="data2name.destination"> <el-cascader v-model="formData.destination" :options="addressOptions" /> </el-form-item> -->
+    <el-form-item :label="data2name.destination"> <el-input v-model="formData.destination" /> </el-form-item>
     <el-form-item :label="data2name.description"> <el-input v-model="formData.description" /> </el-form-item>
     <br />
     <h2 class="title">产品信息</h2>
@@ -48,8 +50,8 @@ export default {
     let array = [] // 产品 id 转换为 数组
     return {
       array,
-      vehicleArr, 
-      formData, 
+      vehicleArr,
+      formData,
       addressOptions,
       data2name,
     }
@@ -85,7 +87,7 @@ export default {
     async onSubmit() {
 
       if (!this.formDataRight()) return
-      
+
       const url = `${URL}/logistics/add`
       const options = { emulateJSON: true }
       const { driver, contact, vehicle, vehicleId, departure, destination, description, departureDatetime, loadTime, productName, originPlace, specification } = this.formData
@@ -111,7 +113,7 @@ export default {
           qr: "-1",
         },
       }
-      
+
       console.log("上传的数据：", data)
 
       const { data: resData } = await this.$axios.post(url, data, options)
@@ -121,7 +123,7 @@ export default {
       if (resData.code == "200" && resData.msg == "success") {
         this.$message.success("上传成功")
       }
-      else 
+      else
         this.$message.error(`code: ${resData.code}, msg: ${resData.msg}`)
     },
     /* 工具函数 */
@@ -134,7 +136,7 @@ export default {
     // formatTime(ti) {
     //   let data
     //   try {
-    //     data = 
+    //     data =
     //       `${ti.getFullYear()}-${ti.getMonth() + 1 > 9 ? "" : "0"}${
     //         ti.getMonth() + 1
     //       }-${ti.getDate() > 9 ? "" : "0"}${ti.getDate()}T${
@@ -145,7 +147,7 @@ export default {
     //   } catch (error) {
     //     console.log(error)
     //   }
-      
+
     //   return data
     // },
     // 通过 vehicle 找到对应的 vehicleid
@@ -160,12 +162,12 @@ export default {
     },
     // 验证输入的输入是否正确
     formDataRight() {
-      const formData = this.formData 
-      return Object.keys(formData).every(key => {  
+      const formData = this.formData
+      return Object.keys(formData).every(key => {
         if (!formData[key]) {
-          this.$message.error(`${data2name[key]}未输入`) 
-          return false 
-        } 
+          this.$message.error(`${data2name[key]}未输入`)
+          return false
+        }
         return true
       })
     }
