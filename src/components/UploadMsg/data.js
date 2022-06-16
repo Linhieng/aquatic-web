@@ -6,10 +6,10 @@ export function getVehicle() {
     const url = `${URL}/vehicle/free`
     const { data: resData } = await axios.get(url)
     if (resData.code === 200 && resData.msg === 'success') {
-      
+
       res(resData.data)
     }
-    else 
+    else
       rej(resData.msg)
   })
 }
@@ -19,11 +19,11 @@ export function getVehicle() {
 const checkPhone = (rule, value, callback) => {
   console.log(value)
   const phoneReg = /^((13|14|15|16|17|18|19)[0-9]{1}\d{8})$/
-  if (!value) 
+  if (!value)
     return callback(new Error('电话号码不能为空'))
 
   setTimeout(() => {
-    if (!Number.isInteger(+value) || !phoneReg.test(value)) 
+    if (!Number.isInteger(+value) || !phoneReg.test(value))
       callback(new Error('请输入正确的手机号!'))
 
     callback()
@@ -68,8 +68,8 @@ export const data2name = {
 
 export const formData = {
   // 车辆信息
-  driver: '范振南',
-  contact: '13412341234',
+  driver: '',
+  contact: '',
   vehicle: '',
   vehicleId: '',
   // 物流信息
